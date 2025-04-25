@@ -7,7 +7,7 @@
 
 **SystemDown** est une page de maintenance au style rétro inspirée des terminaux DOS et BBS des années 80-90. Elle utilise l'art ASCII et des effets visuels vintage pour informer les utilisateurs de manière engageante que votre site est temporairement indisponible.
 
-![Preview](https://via.placeholder.com/800x400?text=SystemDown+Preview)
+![image.png](https://github.com/Nyx-Off/SystemDownIndex/blob/d2e54670ef9139b6dfcabb5f54292590e998a5ea/image.png)
 
 ## Caractéristiques
 
