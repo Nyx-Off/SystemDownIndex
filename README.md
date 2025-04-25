@@ -74,7 +74,7 @@ Ce projet est sous licence MIT. Vous êtes libre de l'utiliser, le modifier et l
 
 - Police VT323 par [Google Fonts](https://fonts.google.com/specimen/VT323)
 - Inspiré par l'esthétique des BBS, DOS et terminaux Unix des années 80-90
-- Développé par [Votre nom]
+- Développé par Nyx-Off
 
 ---
 
