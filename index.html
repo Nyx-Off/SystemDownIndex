@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>SYSTÈME EN MAINTENANCE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+    <style>
+        /* Variables */
+        :root {
+            --main-green: #00ff00;
+            --dark-green: #006600;
+            --background: #000000;
+            --text-color: #00ff00;
+            --text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+            --scan-line-color: rgba(0, 20, 0, 0.2);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            background-color: var(--background);
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            line-height: 1.4;
+            color: var(--text-color);
+            text-shadow: var(--text-shadow);
+            overflow-x: hidden;
+        }
+
+        /* CRT Screen Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                var(--scan-line-color),
+                var(--scan-line-color) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* CRT On/Off Flicker */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: 0;
+            z-index: 1000;
+            pointer-events: none;
+            animation: flicker 6s infinite;
+        }
+
+        /* Container */
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        /* ASCII Art Styling */
+        pre {
+            font-family: 'VT323', monospace;
+            white-space: pre;
+            font-size: 12px;
+            line-height: 1;
+            text-align: center;
+            margin: 30px 0;
+            color: var(--main-green);
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            pre {
+                font-size: 8px;
+            }
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--main-green);
+            position: relative;
+        }
+
+        /* Typewriter Effect */
+        .typewriter {
+            overflow: hidden;
+            border-right: 0.15em solid var(--main-green);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 0.10em;
+            animation: 
+                typing 3.5s steps(40, end),
+                blink-caret 0.75s step-end infinite;
+        }
+
+        /* Warning Box */
+        .warning {
+            border: 1px dashed var(--main-green);
+            padding: 20px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .warning::before {
+            content: "[ WARNING ]";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--background);
+            padding: 0 10px;
+        }
+
+        /* Status Window */
+        .status-window {
+            border: 1px solid var(--main-green);
+            margin: 30px 0;
+            padding: 20px;
+            position: relative;
+        }
+
+        .status-window::before {
+            content: "[ STATUS ]";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--background);
+            padding: 0 10px;
+        }
+
+        .status-line {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .status-line::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Progress Bar ASCII */
+        .progress-bar {
+            height: 20px;
+            width: 100%;
+            margin: 20px 0;
+            background: transparent;
+            position: relative;
+            border: 1px solid var(--main-green);
+        }
+
+        .progress-bar::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 75%;
+            background-color: var(--dark-green);
+            animation: progress 3s ease-in-out infinite alternate;
+        }
+
+        .progress-marker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+            color: var(--main-green);
+            text-shadow: none;
+            z-index: 1;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--main-green);
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--main-green) }
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 0; }
+            0.1%, 0.3% { opacity: 0.3; }
+            0.2% { opacity: 0; }
+            50.1%, 50.3% { opacity: 0.3; }
+            50.2% { opacity: 0; }
+            98% { opacity: 0; }
+            99% { opacity: 0.3; }
+        }
+
+        @keyframes progress {
+            0% { width: 30%; }
+            100% { width: 75%; }
+        }
+
+        /* Blink Effect */
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Static Effect */
+        .static {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwwAADsMBx2+oZAAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMS4zjST9ZwAADDFJREFUaEPtmWlsFNcZhs+ePWYYO4EDtCG0dZMQaCs1Uau0arU/+qOpVDX5kyoSf5A8atIQhRYmQWZtOwQDwQa7gG3J2MY2dkxtY8Qay8ZGFvLaxgbv4PXu2svM7M7uLAsT0kqVIvb1I717z3fvud9dzyfvWWm9oj3Pwcr38Mz3nz01Ov7/2+uyXt/X3vK7Vv3S9wd+9S+9v/pLd/ZqO3fYNKwqt9vt0uu672yfavkl2uVDI2XjzbJnJu94Rv44fv6PVR3OfZXpqXMZ7NLN0tLSNHb7oO5sOu3YL7WsqfbOlT7zj8zS3/cdnCo7/1FFR0R/iQVF5eWxgqNH3X6/38+0Lzf2O/JZy55q8c3IwV3dI3NHBlwRn1fmDDSdLKq/KlxcWsqKTbvd2tOaduGTWvzUJ6Z7NvaxV/bPZGTvhSHvWKBLjvYel2NnT/sDPgvOXFkpt3hs74wLMoLOiHfgvDzYdVh2d3bK9IA7UOvWtTqt1sXpd54gI3VDPW8LjbumBpPXYVdHZp1ypVlycOi4XGiTHbbvykJ3WOBMuCN+58+lQNdh2dfZIdsm7IHEVzKVQZr1TrXLxnOLrMDfOD93n8OMXJ77dUO9OZkD2VVSaGj8aN8x2XH5U8ky+EXS6upqmdHqDKx2d8SJxsOhkdNyAGdu8UxKUNlJXqQmv/DvXfZwkqAa52KF9VZXnI3o1oVGpMlQz/vCdHfnWu7e07hcGjDJXQN75JHOKrqC31ZSKxJZ7Q+2BAZDQ9BotwDu7jzZOi7LQc/T5dLXNW1xYmrrSU2jMDd9FJFuXpiSWrT8/2zHjk3/3/f2pq7HZ5g5GerLFabWuTbj5oO0YqJ1aVTq0mVtBNGYoM38MBBuPIYhWw5JhfaXLpBLJXTCVSMVZWW+qiNK1t9KRWlJIL7QcWCzFJnofm3hyTWtrYmJiIRxuTzZ85I37Llt1qW+xGZarElXwuOVpSXbUx7uUNpG9k4Ou/o6tGlXRdvdlv3GFM/PXN6VnZ1Rm6jrHQ/5nHDqYVZnI9m5KzNt+6UBQJtk2KnPqWLlxIuqDHUcbkDmOKIIhqBJpA24XJIlbwxdY5iYmIhcXGVljc/L6vOOi8q5Z7Fwdp54uCEqNVn2Jnf+KxcZGXl3n/LgdHuTWNRc6jMmjk4fvvP7/v7+EvbKgX3y6MQSbdpVYdNcNcaO8qzTxmbHI/KwZ+eZMvHXiVfkUefeyDPRhFuYAGn3a7GrfQsyIvTpkGiZkJWVJWVgepGK3rEK+7Qb/i0XLDcZPcO7RKTnZ0IcXySF3DsL9W1zM8POmQOe1FWZfWnSXhcXqyKSs5bwj03ynL7T2tq+8tZ+WOyBKx08c9N47/uTWdkzRdNQ8fgWTOWbVDjqmvROJ1vfvfRxJD+6tLuOzciAOx/OvSfKvQvEbdcCuSwYfWqrh/y5uSmJ6QXFfncH6pErcuJKlTh6JUU4HVVLQ6JrAk7Dxjx9z3E42/yRnTb/JMFm2hRzz70p+sZzaYUmDPX8TT5OzYjwRBzdPOGeOzbo3bHoNEpLqCouCFQ+ORRHQTWrm4tM9+jRpxlGXHZVlvR1GxJyC+TA8YoO2Tm+3RMRnX9tDFNTbHrH5YWMNBwuSbHZbPLQ0JDsQ6CK6wU9xWHpdITfVS/7+/vHZqnQQHCyYzGhzQ4Yt5rGxBMwRr0pMakFLVcSG6aQjnY3npnQODcwPCLZ7Sf83dPu4Xb5oKdTLDvW7/erKU4bGYqIHYb6ZhgYGIjF4cFgMJyS2JgO58BK3wZGEH1xWQVnVlJZUDKuDGYxrzEbHQC3ExKvzUwNTPV1pnZ1KRNwdGhIRX1pXh+UJL0bZ3FkQGNjYy3MUxLRgwVaxcRgfLIxMTFvGCUMwJMIGP4OEoAXlRRZKl6bKj1z/BybM0OIWKp8cnJSFRwNQjcmn2fTuRvj4+5BTRUjIyNPp6Jh/iEQCGwmP89nZK2NbWIuZQhsz58/fyfQlRHYLc85FRfY4BsbG7YcHv3pLqgdtXHp2bNnw1Kfz5fzFPT9KHO8XNz+6/38ODd8wejMpslRVE3QNCZPTeeDuZE1DBoGOUY1mpHCIQjrz2QEQL4+vZdHKyNcFpmcnPwVNvqGiTD6oO+NjQ3vEmzTQMWJBcgFc1BFKM+ZvCp2hA3vYd/QCMavs7IywhBFB3fV19f7G+obHgbkPdiFi4CjMKUDyvmA5YaRZxpgLHkN4jCvX7v+FxDR+j2eUKdtXcVYdnb2aHZ2dgHHLwCG+tzcnEfGbBHI+HXsVtHXoFi1svLPV7H+NZ6/19dYWFjYJGNHI7GN9hZA/Fwff4Oe7bSCeC3+FuGZTcMFRjvxvqY4qAGe2eBnKVS9nQtJ7dXVVZfSNjY2puLYMGRxcbFPTFXDhSFKmWFj/Yxt0sFTIYQnZaAGfz5DLgVPl3SxsYk6OGw2WzfHrZTKKCAgcQs7FeXu3RRy9bJH3dN71jqvtHheSWz6u6OjQ1TzVOTICgcHB9ow5HgE4QnHbvO4Dw0NnaOC+gJqaBrPz6E4n5FBQI+5NjQ0ZAOG3h9YLOPnhPgFALPZXM31C8B/MBK12PiYFQvvrpqfn+/ExXc5qGICdIZQdm1ubg4wVCQGiMzBs9LwTHOJEiKyuLjYQzpfhyC6MR+6r1NXVxcwMYhHYrBR5DgWNTQ0lMPO5ng2eIwZGhz6CM9yLCkpmfjvVQ3xRZf+Hh0drXzGQUNDAw0YkV1ZWbF4PJ4xjDQCxQvRqhPpPsaFVKmwsbGxOmxGsYsJDTTQ+J5RxHNdPK8Rr3iRY7xNk1fKZzrSMPF6amqqFRQdGB2FLVZg7yMTGCW4XC472UPjXvfYTbQ9NKKysrIYSVLfhO/tQ5tnY0IBUioqKgJRWTF8mDCYIqwCIBRCcD0GfUfUJ6HI5MZQZ5pnsHVCwBSijjcSXEkqPw9XVla+LJVzfZt9LdJCGJKYfZQpFOVhPo9H1Xr24xfp7yrsDMqDivFLvA5Afw8qlUcZqcHCRNSUQH7RRlD30tJSGNnZ2VnTXUhNT3yFzqCjoSKZTKZfL3XuD8jDUPsrLs4M11dSQyOYMNBgGMwDGEVFAcZAUgSZRkuUzD8HEpfEv9Lj4LnNLj/PUcIjNtMFnHUwV4H+eVT3HMKGQnJycmJqampB5XyL6/j4+NnZ2dn7fGN2dnYzwqEfGNCkrWtPfOO3LS0lZPT09FJmZqad2Eui2KNpYFx5efkQdqJbHnAjTiZGhqnl5ubWzc/Pj1DD8W7wuVdJrx2qVsjSu92eD+1DQUcI+wYcNrNnb1dXV9/j7+/WCPnJyUkJRKDn9u3bF+8v9d1jQr3FYtHGTGf3eL0kZGfT2VhTmE5dDY2N4Wpq9MdwgUf/3rtpqfqFZPLZh6jKj9Gj3IhfPOxuS7jHk8Qv49x1Pc/QcqG8EaZAL4Z1+ocYMu5FDcNx/7p16xbXdlgYJxIeI8bpJ6ZJN5xqRwvI32fQ2WgRCFKuS/WRJ50/cN8zXnVjvJvQlksmPNaZcF1yN2ZVkgOT2qPBIHnJgdECxgnZ5KLJgdKP33/2bOdpyV0pXb0Kkk8y0d9/FQQCgf4+9+Xb0FpTU51jZbNZXZfvXHItaKXt9Hf7eI93gWg8dNLYJCl4/8uRj3OepEgJ2uMf/aWs77psnUTTYXPXlG3G5IIVx+KqRZu9urMf1Ot1ZTpBvS3dS8+eeX2OMK48KKPcX+0rdVDRdjldHVyxv/5c7+6n7BfJL3wsTCwZ17hNiGwpDuJwfKrD+cF/3r8z5u+/u3rrXYA3gOOtwkwvPd4uN7LbC/z/4rJxoYDQj9k2MtRsQv7Eb2qmC+d6U/zhjuC6w0jDsQP/n3vPIU+/nfP9+4VJFm0UFVFZ1/+/v3Lr/wGh9R5YfYZqrQAAAABJRU5ErkJggg==');
+            opacity: 0.05;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            body, html {
+                font-size: 16px;
+            }
+            
+            .container {
+                width: 95%;
+                padding: 20px 0;
+            }
+            
+            .header, .warning, .status-window {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="static"></div>
+    <div class="container">
+        <div class="header">
+            <h1 class="typewriter">SYSTÈME EN MAINTENANCE</h1>
+        </div>
+        
+        <pre>
+
+_____/\\\\\\\\\\\____/\\\________/\\\_____/\\\\\\\\\\\____/\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\__/\\\\____________/\\\\_        
+ ___/\\\/////////\\\_\///\\\____/\\\/____/\\\/////////\\\_\///////\\\/////__\/\\\///////////__\/\\\\\\________/\\\\\\_       
+  __\//\\\______\///____\///\\\/\\\/_____\//\\\______\///________\/\\\_______\/\\\_____________\/\\\//\\\____/\\\//\\\_      
+   ___\////\\\_____________\///\\\/________\////\\\_______________\/\\\_______\/\\\\\\\\\\\_____\/\\\\///\\\/\\\/_\/\\\_     
+    ______\////\\\____________\/\\\____________\////\\\____________\/\\\_______\/\\\///////______\/\\\__\///\\\/___\/\\\_    
+     _________\////\\\_________\/\\\_______________\////\\\_________\/\\\_______\/\\\_____________\/\\\____\///_____\/\\\_   
+      __/\\\______\//\\\________\/\\\________/\\\______\//\\\________\/\\\_______\/\\\_____________\/\\\_____________\/\\\_  
+       _\///\\\\\\\\\\\/_________\/\\\_______\///\\\\\\\\\\\/_________\/\\\_______\/\\\\\\\\\\\\\\\_\/\\\_____________\/\\\_ 
+        ___\///////////___________\///__________\///////////___________\///________\///////////////__\///______________\///__
+
+</pre>
+        
+        <div class="warning">
+            <h2>ACCÈS TEMPORAIREMENT RESTREINT</h2>
+            <p>Le système est actuellement en cours de maintenance pour améliorer ses performances et sa sécurité.</p>
+            <p>Veuillez réessayer ultérieurement.</p>
+        </div>
+        
+        <div class="status-window">
+            <div class="status-line">Initialisation du protocole de maintenance...</div>
+            <div class="status-line">Optimisation de la base de données en cours...</div>
+            <div class="status-line">Déploiement des mises à jour de sécurité...</div>
+            
+            <div class="progress-bar">
+                <div class="progress-marker">
+                    <span>[</span>
+                    <span>]</span>
+                </div>
+            </div>
+            
+            <div class="status-line">Estimation du temps restant: Variable</div>
+            <div class="status-line">Status: <span class="blink">EN COURS</span></div>
+        </div>
+        
+        <pre>
+
+            .o oOOOOOOOo                                            OOOo
+            Ob.OOOOOOOo  OOOo.      oOOo.                      .adOOOOOOO
+            OboO"""""""""""".OOo. .oOOOOOo.    OOOo.oOOOOOo.."""""""""'OO
+            OOP.oOOOOOOOOOOO "POOOOOOOOOOOo.   `"OOOOOOOOOP,OOOOOOOOOOOB'
+            `O'OOOO'     `OOOOo"OOOOOOOOOOO` .adOOOOOOOOO"oOOO'    `OOOOo
+            .OOOO'            `OOOOOOOOOOOOOOOOOOOOOOOOOO'            `OO
+            OOOOO                 '"OOOOOOOOOOOOOOOO"`                oOO
+           oOOOOOba.                .adOOOOOOOOOOba               .adOOOOo.
+          oOOOOOOOOOOOOOba.    .adOOOOOOOOOO@^OOOOOOOba.     .adOOOOOOOOOOOO
+         OOOOOOOOOOOOOOOOO.OOOOOOOOOOOOOO"`  '"OOOOOOOOOOOOO.OOOOOOOOOOOOOO
+         "OOOO"       "YOoOOOOMOIONODOO"`  .   '"OOROAOPOEOOOoOY"     "OOO"
+            Y           'OOOOOOOOOOOOOO: .oOOo. :OOOOOOOOOOO?'         :`
+            :            .oO%OOOOOOOOOOo.OOOOOO.oOOOOOOOOOOOO?         .
+            .            oOOP"%OOOOOOOOoOOOOOOO?oOOOOO?OOOO"OOo
+                         '%o  OOOO"%OOOO%"%OOOOO"OOOOOO"OOO':
+                              `$"  `OOOO' `O"Y ' `OOOO'  o             .
+            .                  .     OP"          : o     .
+                                      :
+                                      .
+        
+
+</pre>
+        
+        <div class="footer">
+            <p>© SYSTÈME - <span class="blink">CONNEXION SÉCURISÉE</span></p>
+            <p>[RETOURNEZ PLUS TARD]</p>
+        </div>
+    </div>
+    
+    <script>
+        // Add a quick CRT flicker effect occasionally
+        function randomFlicker() {
+            const body = document.body;
+            const flickerTime = Math.random() * 200;
+            
+            body.style.opacity = '0.8';
+            setTimeout(() => {
+                body.style.opacity = '1';
+            }, flickerTime);
+            
+            // Schedule next flicker
+            setTimeout(randomFlicker, Math.random() * 10000 + 2000);
+        }
+        
+        // Start random flicker effect
+        setTimeout(randomFlicker, 3000);
+    </script>
+</body>
+</html>
